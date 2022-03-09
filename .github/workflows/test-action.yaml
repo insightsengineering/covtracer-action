@@ -34,10 +34,10 @@ jobs:
       - name: Run r cmd check
         run: |
           R CMD build stageddeps.elecinfra
-          R CMD INSTALL stageddeps.elecinfra_*.tar.gz
+          R CMD INSTALL --with-keep.source stageddeps.elecinfra_*.tar.gz
           R CMD check stageddeps.elecinfra_*.tar.gz
 
-      - name: Test bioccheck action
+      - name: Test covracercheck action
         uses: ./
         with:
           path: "stageddeps.elecinfra"
