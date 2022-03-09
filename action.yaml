@@ -50,10 +50,14 @@ runs:
       run: |
         options(repos = c(CRAN = "https://cloud.r-project.org/"))
         ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+        if (!require("remotes")) {
+          install.packages("remotes",
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores)
+        }
         if (!require("covtracer")) {
           remotes::install_github("Genentech/covtracer",
             dependencies = TRUE, upgrade = "never", Ncpus = ncores,
-            auth_token="GITHUB_TOKEN"
+            auth_token=Sys.getenv("GITHUB_TOKEN")
           )
         }
         if (!require("optparse")) {

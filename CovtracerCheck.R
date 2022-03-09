@@ -1,18 +1,9 @@
 #!/usr/bin/env Rscript
 
-
-#if (!require("magrittr")) {
-#  install.packages("magrittr", repos = "https://cloud.r-project.org/", dependencies = TRUE, upgrade = "never")
-#}
-#if (!require("dplyr")) {
-#  install.packages("dplyr", repos = "https://cloud.r-project.org/", dependencies = TRUE, upgrade = "never")
-#}
-
-
 library("optparse")
 library("covtracer")
 library("magrittr")
-#library("dplyr")
+library("dplyr")
 
 
 get_option_list <- function() {
