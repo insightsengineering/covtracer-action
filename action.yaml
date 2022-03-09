@@ -41,9 +41,12 @@ runs:
         key: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
         restore-keys: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}
 
+    - name: Debug info
+      run:
+        - printenv
+      shell: bash
+
     - name: Install dependencies
-      env:
-        GITHUB_TOKEN: ${{ secrets.INDIVIDUAL_GH_PAT }}
       run: |
         options(repos = c(CRAN = "https://cloud.r-project.org/"))
         ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)

@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         image: ["rocker/verse"]
-        tag: ["4.1.2", "4.1.0", "4.0.3", "3.6.3"]
+        tag: ["4.1.2",] # [ "4.1.0", "4.0.3", "3.6.3"]
     steps:
 
       - name: Checkout repo
@@ -39,6 +39,8 @@ jobs:
 
       - name: Test covracercheck action
         uses: ./
+        env:
+          GITHUB_TOKEN: ${{ secrets.INDIVIDUAL_GH_PAT }}
         with:
           path: "stageddeps.elecinfra"
           allow-failure: true
