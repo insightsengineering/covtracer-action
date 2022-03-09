@@ -55,15 +55,21 @@ print(cov)
 
 ttdf <- test_trace_df(cov)
 print("-------- ttdf -----")
+
+write.table(ttdf, file = ".ttdf.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
 print(ttdf)
 
+print("------------------------------ traceability_matrix -------------------------------")
 traceability_matrix <- ttdf %>%
   dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
   dplyr::select(test_name, file) %>%
   dplyr::filter(!duplicated(.)) %>%
   dplyr::arrange(file)
 
-print("------------------------------ traceability_matrix -------------------------------")
+write.table(traceability_matrix, file = ".traceability_matrix.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
+
 print(traceability_matrix)
 
 print("------------------------------ untested_behaviour ------------------------------")
@@ -72,6 +78,9 @@ untested_behaviour <- ttdf %>%
   dplyr::select(test_name, count, alias, file) %>%
   dplyr::filter(is.na(count)) %>%
   dplyr::arrange(alias)
+
+write.table(untested_behaviour, file = ".untested_behaviour.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
 print(untested_behaviour)
 
 print("------------------------------ directly_tested ------------------------------")
@@ -81,6 +90,9 @@ directly_tested <- ttdf %>%
   dplyr::group_by(alias) %>%
   dplyr::summarize(any_direct_tests = any(direct, na.rm = TRUE)) %>%
   dplyr::arrange(alias)
+
+write.table(directly_tested, file = ".directly_tested.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
 
 print(directly_tested)
 print("------------------------------ end ------------------------------")

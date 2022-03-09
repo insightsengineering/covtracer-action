@@ -12,10 +12,14 @@ inputs:
     required: false
     type: boolean
     default: false
-  ignore-file-types:
+  ignored-file-types:
     description: CovtracerCheck can ignore none code file types.
     required: false
-    default: ""
+    default: "data,class"
+  minimal-coverage:
+    description: "Minimal coverage"
+    required: false
+    default: 80
   post-result-as-comment:
     description: "post the check result as a PR comment"
     required: false
@@ -91,6 +95,12 @@ runs:
     - name: Format output
       if: inputs.post-result-as-comment
       run: |
+        ls -al .
+        echo " ------ covtracer_result ------"
+        [ -f covtracer_result.txt ] && cat covtracer_result.txt
+        echo "----------------- covtracer_fail -------------------------------"
+        [ -f .covtracer_fail ] && cat .covtracer_fail
+        echo "---------------------------------------------------------"
         test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED.\n" > covtracer_result_formatted.txt) || \
           (echo -e "### CovtracerCheck PASSED.\n" > covtracer_result_formatted.txt)
         head -2 covtracer_result.txt >> covtracer_result_formatted.txt
