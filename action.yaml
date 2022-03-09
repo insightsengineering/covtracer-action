@@ -42,8 +42,8 @@ runs:
         restore-keys: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}
 
     - name: Debug info
-      run:
-        - printenv
+      run: |
+        printenv
       shell: bash
 
     - name: Install dependencies
