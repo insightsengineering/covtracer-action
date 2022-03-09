@@ -51,8 +51,6 @@ print("pkg: ")
 print(pkg)
 options(covr.record_tests = TRUE)
 cov <- covr::package_coverage(pkg)
-
-print("-------- cov ------------")
 print(cov)
 
 ttdf <- test_trace_df(cov)

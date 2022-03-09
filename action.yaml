@@ -16,6 +16,10 @@ inputs:
     description: CovtracerCheck can ignore none code file types.
     required: false
     default: ""
+  post-result-as-comment:
+    description: "post the check result as a PR comment"
+    required: false
+    default: true
   no-cache:
     description: "disable github action R dependency caching"
     required: false
@@ -44,11 +48,6 @@ runs:
         path: /home/runner/work/_temp/Library
         key: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
         restore-keys: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}
-
-    - name: Debug info
-      run: |
-        printenv
-      shell: bash
 
     - name: Install dependencies
       run: |
