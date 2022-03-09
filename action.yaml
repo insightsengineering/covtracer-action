@@ -105,23 +105,23 @@ runs:
         echo "CovtracerCheck results" > covtracer_result_formatted.txt 
         if [ -f ".covtracer_traceability_matrix.txt" ]; then
           echo "**Traceability Matrix: **" >> covtracer_result_formatted.txt
-          cat .covtracer_traceability_matrix.txt >> > covtracer_result_formatted.txt
-          echo -e "\n" >> > covtracer_result_formatted.txt
+          cat .covtracer_traceability_matrix.txt >> covtracer_result_formatted.txt
+          echo -e "\n" >> covtracer_result_formatted.txt
         fi
         if [ -f ".covtracer_directly_tested.txt" ]; then
           echo "**Directly tested: **" >> covtracer_result_formatted.txt
-          cat .covtracer_directly_tested.txt >> > covtracer_result_formatted.txt
-          echo -e "\n" >> > covtracer_result_formatted.txt
+          cat .covtracer_directly_tested.txt >> covtracer_result_formatted.txt
+          echo -e "\n" >> covtracer_result_formatted.txt
         fi
         if [ -f ".covtracer_untested_behaviour.txt" ]; then
           echo -e "\n**Untested: **\n" >> covtracer_result_formatted.txt
-          cat .covtracer_untested_behaviour.txt >> > covtracer_result_formatted.txt
-          echo -e "\n" >> > covtracer_result_formatted.txt
+          cat .covtracer_untested_behaviour.txt >> covtracer_result_formatted.txt
+          echo -e "\n" >> covtracer_result_formatted.txt
         fi
         if [ -f ".covtracer_coverage_result.txt" ]; then
           echo -e "\n**Coverage test summary: **\n" >> covtracer_result_formatted.txt
-          cat .covtracer_coverage_result.txt >> > covtracer_result_formatted.txt
-          echo -e "\n" >> > covtracer_result_formatted.txt
+          cat .covtracer_coverage_result.txt >> covtracer_result_formatted.txt
+          echo -e "\n" >> covtracer_result_formatted.txt
         fi
 #        test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED.\n" > covtracer_result_formatted.txt) || \
 #          (echo -e "### CovtracerCheck PASSED.\n" > covtracer_result_formatted.txt)
