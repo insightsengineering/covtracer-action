@@ -51,7 +51,7 @@ print("pkg: ")
 print(pkg)
 options(covr.record_tests = TRUE)
 cov <- covr::package_coverage(pkg)
-write.table(cov, file = ".covtracer_coverage_result.txt", sep = "\t",
+write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
             row.names = TRUE, col.names = NA)
 print(cov)
 
@@ -59,7 +59,7 @@ print(cov)
 ttdf <- test_trace_df(cov)
 print("-------- ttdf -----")
 
-write.table(ttdf, file = ".ttdf.txt", sep = "\t",
+write.table(ttdf, file = ".ttdf.txt", sep = "|",
             row.names = TRUE, col.names = NA)
 print(ttdf)
 
@@ -70,8 +70,8 @@ traceability_matrix <- ttdf %>%
   dplyr::filter(!duplicated(.)) %>%
   dplyr::arrange(file)
 
-write.table(traceability_matrix, file = ".covtracer_traceability_matrix.txt", sep = "\t",
-            row.names = TRUE, col.names = NA)
+write.table(traceability_matrix, file = ".covtracer_traceability_matrix.txt", sep = "|",
+            row.names = TRUE, col.names = NA, na = " ", fileEncoding = "UTF-8", quote=FALSE)
 
 print(traceability_matrix)
 
@@ -82,7 +82,7 @@ untested_behaviour <- ttdf %>%
   dplyr::filter(is.na(count)) %>%
   dplyr::arrange(alias)
 
-write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "\t",
+write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
             row.names = TRUE, col.names = NA)
 print(untested_behaviour)
 
@@ -94,7 +94,7 @@ directly_tested <- ttdf %>%
   dplyr::summarize(any_direct_tests = any(direct, na.rm = TRUE)) %>%
   dplyr::arrange(alias)
 
-write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "\t",
+write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
             row.names = TRUE, col.names = NA)
 
 print(directly_tested)
