@@ -28,20 +28,19 @@ jobs:
       - name: Checkout test repo
         uses: actions/checkout@v2
         with:
-          repository: "openpharma/staged.dependencies"
-          path: "staged.dependencies"
+          repository: "insightsengineering/r.pkg.template"
+          path: "r.pkg.template"
 
       - name: Run r cmd check
         run: |
-          R -e 'install.packages("git2r", upgrade="never", repos = c(CRAN = "https://cloud.r-project.org/"))'
-          R CMD build staged.dependencies
-          R CMD INSTALL --with-keep.source staged.dependencies_*.tar.gz
-          R CMD check staged.dependencies_*.tar.gz
+          R CMD build r.pkg.template
+          R CMD INSTALL --with-keep.source r.pkg.template_*.tar.gz
+          R CMD check r.pkg.template_*.tar.gz
 
       - name: Test covracercheck action
         uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.INDIVIDUAL_GH_PAT }}
         with:
-          path: "staged.dependencies"
+          path: "r.pkg.template"
           allow-failure: true
