@@ -1,5 +1,5 @@
 ---
-name: CovtracerCheck action test
+name: CovtracerCheck action test without cache
 
 on:
   push:
@@ -28,24 +28,19 @@ jobs:
       - name: Checkout test repo
         uses: actions/checkout@v2
         with:
-          repository: "insightsengineering/r.pkg.template"
-          path: "r.pkg.template"
+          repository: "openpharma/stageddeps.water"
+          path: "stageddeps.water"
 
       - name: Run r cmd check
         run: |
-          R -e 'install.packages(c("plumber", "shiny", "shinytest"), dependencies = TRUE, upgrade = "never", repos = c(CRAN = "https://cloud.r-project.org/"))'
-          R -e 'if (require("shinytest")) {
-                  shinytest::installDependencies() 
-                  file.copy(shinytest:::find_phantom(), "/usr/local/bin/phantomjs")
-                  }'
-          R CMD build r.pkg.template
-          R CMD INSTALL --with-keep.source r.pkg.template_*.tar.gz
-          R CMD check r.pkg.template_*.tar.gz
+          R CMD build stageddeps.water
+          R CMD INSTALL --with-keep.source stageddeps.water_*.tar.gz
+          R CMD check stageddeps.water_*.tar.gz
 
-      - name: Test covracercheck action
+      - name: Test covracerCheck action
         uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.INDIVIDUAL_GH_PAT }}
         with:
-          path: "r.pkg.template"
+          path: "stageddeps.water"
           allow-failure: true

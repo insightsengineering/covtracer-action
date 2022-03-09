@@ -12,6 +12,10 @@ inputs:
     required: false
     type: boolean
     default: false
+  ignore-file-types:
+    description: CovtracerCheck can ignore none code file types.
+    required: false
+    default: ""
   no-cache:
     description: "disable github action R dependency caching"
     required: false
