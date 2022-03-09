@@ -98,22 +98,44 @@ runs:
         ls -al .
         echo " ------ covtracer_result ------"
         [ -f covtracer_result.txt ] && cat covtracer_result.txt
+        echo "------------------ end covtracer_result---------------------------------------"
         echo "----------------- covtracer_fail -------------------------------"
         [ -f .covtracer_fail ] && cat .covtracer_fail
-        echo "---------------------------------------------------------"
-        test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED.\n" > covtracer_result_formatted.txt) || \
-          (echo -e "### CovtracerCheck PASSED.\n" > covtracer_result_formatted.txt)
-        head -2 covtracer_result.txt >> covtracer_result_formatted.txt
-        echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt
-        echo '```'  >> covtracer_result_formatted.txt
-        sed -n '/.*Installing package...$/, /^Summary:$/p' covtracer_result.txt | tail -n +2 |grep -v "^Summary:$" >> covtracer_result_formatted.txt
-        echo '```'  >> covtracer_result_formatted.txt
-        echo "</details>" >> covtracer_result_formatted.txt
-        echo  -e "\n### Summary:\n" >> covtracer_result_formatted.txt
-        echo '```'  >> covtracer_result_formatted.txt
-        grep -A 3 "^Summary:$" covtracer_result.txt | grep -v Summary >> covtracer_result_formatted.txt
-        echo '```' >> covtracer_result_formatted.txt
-        grep -v "CovtracerCheck FAILED" covtracer_result.txt | tail -3 >> covtracer_result_formatted.txt
+        echo "------------------ end covtracer_fail ---------------------------------------"
+        echo "CovtracerCheck results" > covtracer_result_formatted.txt 
+        if [ -f ".covtracer_traceability_matrix.txt" ]; then
+          echo "**Traceability Matrix: **" >> covtracer_result_formatted.txt
+          cat .covtracer_traceability_matrix.txt >> > covtracer_result_formatted.txt
+          echo -e "\n" >> > covtracer_result_formatted.txt
+        fi
+        if [ -f ".covtracer_directly_tested.txt" ]; then
+          echo "**Directly tested: **" >> covtracer_result_formatted.txt
+          cat .covtracer_directly_tested.txt >> > covtracer_result_formatted.txt
+          echo -e "\n" >> > covtracer_result_formatted.txt
+        fi
+        if [ -f ".covtracer_untested_behaviour.txt" ]; then
+          echo -e "\n**Untested: **\n" >> covtracer_result_formatted.txt
+          cat .covtracer_untested_behaviour.txt >> > covtracer_result_formatted.txt
+          echo -e "\n" >> > covtracer_result_formatted.txt
+        fi
+        if [ -f ".covtracer_coverage_result.txt" ]; then
+          echo -e "\n**Coverage test summary: **\n" >> covtracer_result_formatted.txt
+          cat .covtracer_coverage_result.txt >> > covtracer_result_formatted.txt
+          echo -e "\n" >> > covtracer_result_formatted.txt
+        fi
+#        test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED.\n" > covtracer_result_formatted.txt) || \
+#          (echo -e "### CovtracerCheck PASSED.\n" > covtracer_result_formatted.txt)
+#        head -2 covtracer_result.txt >> covtracer_result_formatted.txt
+#        echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt
+#        echo '```'  >> covtracer_result_formatted.txt
+#        sed -n '/.*Installing package...$/, /^Summary:$/p' covtracer_result.txt | tail -n +2 |grep -v "^Summary:$" >> covtracer_result_formatted.txt
+#        echo '```'  >> covtracer_result_formatted.txt
+#        echo "</details>" >> covtracer_result_formatted.txt
+#        echo  -e "\n### Summary:\n" >> covtracer_result_formatted.txt
+#        echo '```'  >> covtracer_result_formatted.txt
+#        grep -A 3 "^Summary:$" covtracer_result.txt | grep -v Summary >> covtracer_result_formatted.txt
+#        echo '```' >> covtracer_result_formatted.txt
+#        grep -v "CovtracerCheck FAILED" covtracer_result.txt | tail -3 >> covtracer_result_formatted.txt
       shell: bash
 
     - uses: marocchino/sticky-pull-request-comment@v2
