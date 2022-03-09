@@ -12,7 +12,10 @@ inputs:
     required: false
     type: boolean
     default: false
-
+  no-cache:
+    description: "disable github action R dependency caching"
+    required: false
+    default: false
 branding:
   icon: "arrow-right"
   color: "blue"
