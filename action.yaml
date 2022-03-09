@@ -39,13 +39,14 @@ runs:
         restore-keys: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}
 
     - name: Install dependencies
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         options(repos = c(CRAN = "https://cloud.r-project.org/"))
         ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
         if (!require("covtracer")) {
           remotes::install_github("Genentech/covtracer",
-            dependencies = TRUE, upgrade = "never", Ncpus = ncores,
-            auth_token="INDIVIDUAL_GH_PAT"
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores
           )
         }
         if (!require("optparse")) {
