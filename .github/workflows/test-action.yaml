@@ -32,7 +32,6 @@ jobs:
 
       - name: Run r cmd check
         run: |
-          exit 2
           R -e 'install.packages(c("plumber", "shiny", "shinytest"),
                         dependencies = TRUE,
                         upgrade = "never",
