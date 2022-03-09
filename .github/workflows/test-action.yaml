@@ -41,7 +41,4 @@ jobs:
         uses: ./
         with:
           path: "stageddeps.elecinfra"
-          no-check-bioc-help: true
-          no-check-man-doc: true
-          no-check-vignettes: true
-          no-check-bioc-views: true
+          allow-failure: true
