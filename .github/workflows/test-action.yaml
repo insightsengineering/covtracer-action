@@ -28,19 +28,19 @@ jobs:
       - name: Checkout test repo
         uses: actions/checkout@v2
         with:
-          repository: "Roche/rtables"
-          path: "rtables"
+          repository: "openpharma/staged.dependencies"
+          path: "staged.dependencies"
 
       - name: Run r cmd check
         run: |
-          R CMD build rtables
-          R CMD INSTALL --with-keep.source rtables_*.tar.gz
-          R CMD check rtables_*.tar.gz
+          R CMD build staged.dependencies
+          R CMD INSTALL --with-keep.source staged.dependencies_*.tar.gz
+          R CMD check staged.dependencies_*.tar.gz
 
       - name: Test covracercheck action
         uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.INDIVIDUAL_GH_PAT }}
         with:
-          path: "rtables"
+          path: "staged.dependencies"
           allow-failure: true
