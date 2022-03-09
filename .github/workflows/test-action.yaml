@@ -1,5 +1,5 @@
 ---
-name: BiocCheck action test
+name: CovtracerCheck action test
 
 on:
   push:

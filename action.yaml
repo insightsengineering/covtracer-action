@@ -44,7 +44,8 @@ runs:
         ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
         if (!require("covtracer")) {
           remotes::install_github("Genentech/covtracer",
-            dependencies = TRUE, upgrade = "never", Ncpus = ncores
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores,
+            auth_token="INDIVIDUAL_GH_PAT"
           )
         }
         if (!require("optparse")) {
