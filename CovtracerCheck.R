@@ -3,8 +3,6 @@
 library("optparse")
 library("covtracer")
 library("magrittr")
-library("dplyr")
-
 
 get_option_list <- function() {
   list(

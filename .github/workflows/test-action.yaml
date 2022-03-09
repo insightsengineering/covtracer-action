@@ -28,19 +28,19 @@ jobs:
       - name: Checkout test repo
         uses: actions/checkout@v2
         with:
-          repository: "openpharma/stageddeps.elecinfra"
-          path: "stageddeps.elecinfra"
+          repository: "Roche/rtables"
+          path: "rtables"
 
       - name: Run r cmd check
         run: |
-          R CMD build stageddeps.elecinfra
-          R CMD INSTALL --with-keep.source stageddeps.elecinfra_*.tar.gz
-          R CMD check stageddeps.elecinfra_*.tar.gz
+          R CMD build rtables
+          R CMD INSTALL --with-keep.source rtables_*.tar.gz
+          R CMD check rtables_*.tar.gz
 
       - name: Test covracercheck action
         uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.INDIVIDUAL_GH_PAT }}
         with:
-          path: "stageddeps.elecinfra"
+          path: "rtables"
           allow-failure: true
