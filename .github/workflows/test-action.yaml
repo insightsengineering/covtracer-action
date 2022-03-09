@@ -33,6 +33,7 @@ jobs:
 
       - name: Run r cmd check
         run: |
+          R -e 'install.packages("git2r", upgrade="never", repos = c(CRAN = "https://cloud.r-project.org/"))'
           R CMD build staged.dependencies
           R CMD INSTALL --with-keep.source staged.dependencies_*.tar.gz
           R CMD check staged.dependencies_*.tar.gz
