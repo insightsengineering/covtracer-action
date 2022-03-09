@@ -52,7 +52,7 @@ print(pkg)
 options(covr.record_tests = TRUE)
 cov <- covr::package_coverage(pkg)
 write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = " ", fileEncoding = "UTF-8", quote=FALSE )
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
 print(cov)
 
 
@@ -60,7 +60,7 @@ ttdf <- test_trace_df(cov)
 print("-------- ttdf -----")
 
 write.table(ttdf, file = ".ttdf.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = " ", fileEncoding = "UTF-8", quote=FALSE )
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
 print(ttdf)
 
 print("------------------------------ traceability_matrix -------------------------------")
@@ -71,7 +71,7 @@ traceability_matrix <- ttdf %>%
   dplyr::arrange(file)
 
 write.table(traceability_matrix, file = ".covtracer_traceability_matrix.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = " ", fileEncoding = "UTF-8", quote=FALSE)
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE)
 
 print(traceability_matrix)
 
@@ -83,7 +83,7 @@ untested_behaviour <- ttdf %>%
   dplyr::arrange(alias)
 
 write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = " ", fileEncoding = "UTF-8", quote=FALSE )
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
 print(untested_behaviour)
 
 print("------------------------------ directly_tested ------------------------------")
@@ -95,7 +95,7 @@ directly_tested <- ttdf %>%
   dplyr::arrange(alias)
 
 write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = " ", fileEncoding = "UTF-8", quote=FALSE )
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
 
 print(directly_tested)
 print("------------------------------ end ------------------------------")
