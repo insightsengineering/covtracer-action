@@ -56,11 +56,10 @@ write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
             quote = FALSE)
 print(cov)
 print(typeof(cov))
-
-ress <- print(cov)
-print(ress)
-cat(ress, file = ".covtracer_coverage_summary.txt",
-    sep = "|", append = FALSE)
+# print result of print to file
+sink(".covtracer_coverage_summary.txt")
+print(cov)
+sink()
 
 covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
 
