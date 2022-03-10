@@ -58,6 +58,8 @@ print(cov)
 print(typeof(cov))
 cov_str <- toString(cov)
 print(cov_str)
+ress <- print(cov)
+print(ress)
 cat(cov_str, file = ".covtracer_coverage_summary.txt",
     sep = "", append = FALSE)
 
@@ -119,4 +121,15 @@ write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
             quote = FALSE)
 
 print(directly_tested)
+
+
+
+as.data.frame(cov)
+zero_cov <- covr::zero_coverage()
+write.table(zero_cov, file = ".covr_zero_coverage.txt", sep = "|",
+            row.names = TRUE, col.names = NA, na = "NA",
+            fileEncoding = "UTF-8", quote = FALSE)
+
+print("------------------------------ zero_cov ------------------------------")
+print(zero_cov)
 print("------------------------------ end ------------------------------")
