@@ -75,10 +75,10 @@ runs:
           install.packages("covr",
             dependencies = TRUE, upgrade = "never", Ncpus = ncores)
         }
-        if (!require("DT")) {
-          install.packages(c("DT", "htmltools"),
-            dependencies = TRUE, upgrade = "never", Ncpus = ncores)
-        }
+        #if (!require("DT")) {
+        #  install.packages(c("DT", "htmltools"),
+        #    dependencies = TRUE, upgrade = "never", Ncpus = ncores)
+        #}
       shell: Rscript {0}
 
     - name: Prepare script options

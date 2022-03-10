@@ -18,8 +18,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["rocker/verse"]
-        tag: ["4.1.2"]  # , "4.1.0", "4.0.3", "3.6.3"]
+        image: ["ghcr.io/insightsengineering/rstudio_4.1.2_bioc_3.14"]
+        tag: ["latest"]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -32,15 +32,6 @@ jobs:
 
       - name: Run r cmd check
         run: |
-          R -e 'install.packages(c("plumber", "shiny", "shinytest"),
-                        dependencies = TRUE,
-                        upgrade = "never",
-                        repos = c(CRAN = "https://cloud.r-project.org/"))'
-          R -e 'if (require("shinytest")) {
-                  shinytest::installDependencies()
-                  file.copy(shinytest:::find_phantom(),
-                  "/usr/local/bin/phantomjs")
-                  }'
           R CMD build r.pkg.template
           R CMD INSTALL --with-keep.source r.pkg.template_*.tar.gz
           R CMD check r.pkg.template_*.tar.gz

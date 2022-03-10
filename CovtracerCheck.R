@@ -69,8 +69,9 @@ sink(".covtracer_coverage_summary.txt")
 print(cov)
 sink()
 print("------------------- after sink -------------------")
+
 print("------------------- prepare report in html -------------------")
-covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
+# covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
 
 print("------------------------------ traceability_matrix -------------------------------")
 traceability_matrix <- ttdf %>%
