@@ -57,14 +57,16 @@ write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
 print(cov)
 print(typeof(cov))
 # print result of print to file
+print("before sink")
 sink(".covtracer_coverage_summary.txt")
 print(cov)
 sink()
-
+print("after sink")
+print("prepare report in html")
 covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
 
-ttdf <- test_trace_df(cov)
 print("-------- ttdf -----")
+ttdf <- test_trace_df(cov)
 write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
             quote = FALSE)
@@ -93,10 +95,10 @@ untested_behaviour <- ttdf %>%
   dplyr::arrange(alias)
 
 print(untested_behaviour)
-print(typeof(untested_behaviour))
-print(length(untested_behaviour))
-print(nrow(untested_behaviour))
-print(ncol(untested_behaviour))
+# print(typeof(untested_behaviour))
+# print(length(untested_behaviour))
+# print(nrow(untested_behaviour))
+# print(ncol(untested_behaviour))
 if (nrow(untested_behaviour) > 0) {
   write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
