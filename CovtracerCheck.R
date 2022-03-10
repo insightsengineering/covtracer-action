@@ -58,6 +58,9 @@ print(cov)
 print(typeof(cov))
 cov_str <- toString(cov)
 print(cov_str)
+cat(cov_str, file = ".covtracer_coverage_summary.txt",
+    sep = "\t", append = FALSE)
+
 
 ttdf <- test_trace_df(cov)
 print("-------- ttdf -----")
@@ -91,6 +94,7 @@ untested_behaviour <- ttdf %>%
 write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
             quote = FALSE)
+
 print(untested_behaviour)
 print(typeof(untested_behaviour))
 print(length(untested_behaviour))
