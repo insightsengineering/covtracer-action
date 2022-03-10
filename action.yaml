@@ -124,7 +124,7 @@ runs:
           echo -e "\n" >> covtracer_result_formatted.txt
         fi
         if [ -f .covtracer_coverage_summary.txt ]; then
-          echo -e "\n**Coverage test summary:**\n" >> covtracer_result_formatted.txt
+          echo -e "\n**Coverage test summary2:**\n" >> covtracer_result_formatted.txt
           sed 's/.*/\*\*&\*\*/g' .covtracer_coverage_summary.txt >> covtracer_result_formatted.txt
           echo -e "\n" >> covtracer_result_formatted.txt
         fi

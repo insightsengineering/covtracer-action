@@ -59,8 +59,9 @@ print(typeof(cov))
 cov_str <- toString(cov)
 print(cov_str)
 cat(cov_str, file = ".covtracer_coverage_summary.txt",
-    sep = "\t", append = FALSE)
+    sep = "", append = FALSE)
 
+covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
 
 ttdf <- test_trace_df(cov)
 print("-------- ttdf -----")
