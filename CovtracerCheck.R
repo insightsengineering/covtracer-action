@@ -100,6 +100,10 @@ print(typeof(untested_behaviour))
 print(length(untested_behaviour))
 print(nrow(untested_behaviour))
 print(ncol(untested_behaviour))
+if (nrow(untested_behaviour) == 0) {
+  cat("No untested behaviour detected", file = ".covtracer_untested_behaviour.txt",
+    sep = "", append = FALSE)
+}
 
 print("------------------------------ directly_tested ------------------------------")
 directly_tested <- ttdf %>%
