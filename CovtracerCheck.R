@@ -125,7 +125,7 @@ print(directly_tested)
 
 
 as.data.frame(cov)
-zero_cov <- covr::zero_coverage()
+zero_cov <- covr::zero_coverage(cov)
 write.table(zero_cov, file = ".covr_zero_coverage.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA",
             fileEncoding = "UTF-8", quote = FALSE)
