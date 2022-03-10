@@ -52,16 +52,20 @@ print(pkg)
 options(covr.record_tests = TRUE)
 cov <- covr::package_coverage(pkg)
 write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+            quote = FALSE)
 print(cov)
-
+print(typeof(cov))
+cov_str <- toString(cov)
+print(cov_str)
 
 ttdf <- test_trace_df(cov)
 print("-------- ttdf -----")
-
-write.table(ttdf, file = ".ttdf.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
+write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+            quote = FALSE)
 print(ttdf)
+print(typeof(ttdf))
 
 print("------------------------------ traceability_matrix -------------------------------")
 traceability_matrix <- ttdf %>%
@@ -71,9 +75,11 @@ traceability_matrix <- ttdf %>%
   dplyr::arrange(file)
 
 write.table(traceability_matrix, file = ".covtracer_traceability_matrix.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE)
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+            quote = FALSE)
 
 print(traceability_matrix)
+print(typeof(traceability_matrix))
 
 print("------------------------------ untested_behaviour ------------------------------")
 untested_behaviour <- ttdf %>%
@@ -83,8 +89,11 @@ untested_behaviour <- ttdf %>%
   dplyr::arrange(alias)
 
 write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+            quote = FALSE)
 print(untested_behaviour)
+print(typeof(untested_behaviour))
+print(length(untested_behaviour))
 
 print("------------------------------ directly_tested ------------------------------")
 directly_tested <- ttdf %>%
@@ -95,7 +104,8 @@ directly_tested <- ttdf %>%
   dplyr::arrange(alias)
 
 write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8", quote=FALSE )
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+            quote = FALSE)
 
 print(directly_tested)
 print("------------------------------ end ------------------------------")
