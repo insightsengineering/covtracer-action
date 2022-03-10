@@ -92,18 +92,15 @@ untested_behaviour <- ttdf %>%
   dplyr::filter(is.na(count)) %>%
   dplyr::arrange(alias)
 
-write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
-            quote = FALSE)
-
 print(untested_behaviour)
 print(typeof(untested_behaviour))
 print(length(untested_behaviour))
 print(nrow(untested_behaviour))
 print(ncol(untested_behaviour))
-if (nrow(untested_behaviour) == 0) {
-  cat("No untested behaviour detected", file = ".covtracer_untested_behaviour.txt",
-    sep = "", append = FALSE)
+if (nrow(untested_behaviour) > 0) {
+  write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
+            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+            quote = FALSE)
 }
 
 print("------------------------------ directly_tested ------------------------------")
@@ -120,11 +117,12 @@ write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
 
 print(directly_tested)
 
-# as.data.frame(cov)
 zero_cov <- covr::zero_coverage(cov)
-write.table(zero_cov, file = ".covr_zero_coverage.txt", sep = "|",
+if (nrow(zero_cov) > 0) {
+  write.table(zero_cov, file = ".covr_zero_coverage.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA",
             fileEncoding = "UTF-8", quote = FALSE)
+}
 
 print("------------------------------ zero_cov ------------------------------")
 print(zero_cov)
