@@ -54,15 +54,14 @@ cov <- covr::package_coverage(pkg)
 write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
             quote = FALSE)
-print(cov)
-#print(typeof(cov))
+
 print("-------- ttdf -----")
 ttdf <- test_trace_df(cov)
 write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
             quote = FALSE)
 print(ttdf)
-print(typeof(ttdf))
+# print(typeof(ttdf))
 
 # print result of print to file
 print("------------------- before sink --------------------")
@@ -85,7 +84,7 @@ write.table(traceability_matrix, file = ".covtracer_traceability_matrix.txt", se
             quote = FALSE)
 
 print(traceability_matrix)
-print(typeof(traceability_matrix))
+#print(typeof(traceability_matrix))
 
 print("------------------------------ untested_behaviour ------------------------------")
 untested_behaviour <- ttdf %>%
@@ -116,16 +115,13 @@ directly_tested <- ttdf %>%
 write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
             quote = FALSE)
-
 print(directly_tested)
-
+print("------------------------------ zero_cov ------------------------------")
 zero_cov <- covr::zero_coverage(cov)
 if (nrow(zero_cov) > 0) {
   write.table(zero_cov, file = ".covr_zero_coverage.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA",
             fileEncoding = "UTF-8", quote = FALSE)
 }
-
-print("------------------------------ zero_cov ------------------------------")
 print(zero_cov)
 print("------------------------------ end ------------------------------")
