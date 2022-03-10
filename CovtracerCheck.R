@@ -122,9 +122,7 @@ write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
 
 print(directly_tested)
 
-
-
-as.data.frame(cov)
+# as.data.frame(cov)
 zero_cov <- covr::zero_coverage(cov)
 write.table(zero_cov, file = ".covr_zero_coverage.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA",
