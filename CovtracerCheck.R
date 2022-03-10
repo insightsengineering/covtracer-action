@@ -98,6 +98,8 @@ write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep 
 print(untested_behaviour)
 print(typeof(untested_behaviour))
 print(length(untested_behaviour))
+print(nrow(untested_behaviour))
+print(ncol(untested_behaviour))
 
 print("------------------------------ directly_tested ------------------------------")
 directly_tested <- ttdf %>%
