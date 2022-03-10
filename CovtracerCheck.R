@@ -55,16 +55,7 @@ write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
             quote = FALSE)
 print(cov)
-print(typeof(cov))
-# print result of print to file
-print("before sink")
-sink(".covtracer_coverage_summary.txt")
-print(cov)
-sink()
-print("after sink")
-print("prepare report in html")
-covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
-
+#print(typeof(cov))
 print("-------- ttdf -----")
 ttdf <- test_trace_df(cov)
 write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
@@ -72,6 +63,15 @@ write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
             quote = FALSE)
 print(ttdf)
 print(typeof(ttdf))
+
+# print result of print to file
+print("------------------- before sink --------------------")
+sink(".covtracer_coverage_summary.txt")
+print(cov)
+sink()
+print("------------------- after sink -------------------")
+print("------------------- prepare report in html -------------------")
+covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
 
 print("------------------------------ traceability_matrix -------------------------------")
 traceability_matrix <- ttdf %>%
