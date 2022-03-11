@@ -133,6 +133,7 @@ runs:
           fi
           #if [ -f ".covtracer_coverage_summary.txt" ]; then
             echo -e "\n**Covr test summary:**\n```" >> covtracer_result_formatted.txt
+            sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d'
             sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d' >> covtracer_result_formatted.txt
             #sed 's/.*/\|&\|/g' ".covtracer_coverage_summary.txt" | sed '2 i | --- | --- | --- | --- | --- |' >> covtracer_result_formatted.txt
             echo -e "\n```\n" >> covtracer_result_formatted.txt
