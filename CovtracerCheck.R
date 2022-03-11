@@ -66,16 +66,14 @@ print(cov)
 cov_percent <- covr::percent_coverage(cov)
 print(cov_percent)
 
-covr::to_sonarqube(cov, filename = ".covtrace_sonarqube.txt")
+# covr::to_sonarqube(cov, filename = ".covtrace_sonarqube.txt")
 # print result of print to file
-print("------------------- before sink --------------------")
-sink(file = ".covtracer_coverage_summary.txt", append = FALSE )
-#capture.output(print(cov), file = ".covtracer_coverage_summary.txt", type = c("message"), split = TRUE )
+print("------------------- start coverage report -------------------")
+print(paste0("Coverage: ", cov_percent))
 print(cov)
-sink()
-print("------------------- after sink -------------------")
+print("------------------- end coverage report -------------------")
 
-print("------------------- prepare report in html -------------------")
+#print("------------------- prepare report in html -------------------")
 # covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
 print("------------------------------ zero_cov ------------------------------")
 zero_cov <- covr::zero_coverage(cov)
@@ -86,9 +84,10 @@ if (nrow(zero_cov) > 0) {
 }
 print(zero_cov)
 
+print(cov[[]]$tests)
+
 if (cov_percent >0) {
   print("-------- ttdf -----")
-  print(cov[[]]$tests)
   ttdf <- test_trace_df(cov)
   write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
               row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",

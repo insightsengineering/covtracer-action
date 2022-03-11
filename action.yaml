@@ -143,11 +143,12 @@ runs:
           echo -e "\n**Covr zero coverage summary:**\n" >> covtracer_result_formatted.txt
           if [ -f ".covr_zero_coverage.txt" ]; then
             cat ".covr_zero_coverage.txt"
-            sed 's/.*/|&|/g' .covr_zero_coverage.txt | sed '2 i | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |' >> covtracer_result_formatted.txt
+            sed 's/.*/|&|/g' .covr_zero_coverage.txt | sed '2 i | --- | --- | --- | --- | --- |' >> covtracer_result_formatted.txt
           else
             echo -e "*covr Zero coverage does not detect anything*\n" >> covtracer_result_formatted.txt
           fi
           echo -e "\n" >> covtracer_result_formatted.txt
+          
         else
           echo "❌ CovtracerCheck has errors" >> covtracer_result_formatted.txt
         fi
