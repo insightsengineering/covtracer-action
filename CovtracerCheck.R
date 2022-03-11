@@ -48,81 +48,94 @@ opt$Called_from_command_line <- TRUE # nolint
 print("opt content:")
 print(opt)
 print("pkg: ")
+#pkg <- "stageddeps.water"
+#pkg <- "r.pkg.template"
+#pkg <- "stageddeps.water"
+curr_wd <- getwd()
 print(pkg)
+setwd(pkg)
 options(covr.record_tests = TRUE)
-cov <- covr::package_coverage(pkg)
+cov <- covr::package_coverage(".")
+
+setwd(curr_wd)
 write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
             row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
             quote = FALSE)
 
-print("-------- ttdf -----")
-ttdf <- test_trace_df(cov)
-write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
-            quote = FALSE)
-print(ttdf)
-# print(typeof(ttdf))
+print(cov)
+cov_percent <- covr::percent_coverage(cov)
+print(cov_percent)
 
+covr::to_sonarqube(cov, filename = ".covtrace_sonarqube.txt")
 # print result of print to file
 print("------------------- before sink --------------------")
-sink(".covtracer_coverage_summary.txt")
+sink(file = ".covtracer_coverage_summary.txt", append = FALSE )
+#capture.output(print(cov), file = ".covtracer_coverage_summary.txt", type = c("message"), split = TRUE )
 print(cov)
 sink()
 print("------------------- after sink -------------------")
 
 print("------------------- prepare report in html -------------------")
 # covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
-
-print("------------------------------ traceability_matrix -------------------------------")
-traceability_matrix <- ttdf %>%
-  dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
-  dplyr::select(test_name, file) %>%
-  dplyr::filter(!duplicated(.)) %>%
-  dplyr::arrange(file)
-
-write.table(traceability_matrix, file = ".covtracer_traceability_matrix.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
-            quote = FALSE)
-
-print(traceability_matrix)
-#print(typeof(traceability_matrix))
-
-print("------------------------------ untested_behaviour ------------------------------")
-untested_behaviour <- ttdf %>%
-  dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
-  dplyr::select(test_name, count, alias, file) %>%
-  dplyr::filter(is.na(count)) %>%
-  dplyr::arrange(alias)
-
-print(untested_behaviour)
-# print(typeof(untested_behaviour))
-# print(length(untested_behaviour))
-# print(nrow(untested_behaviour))
-# print(ncol(untested_behaviour))
-if (nrow(untested_behaviour) > 0) {
-  write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
-            quote = FALSE)
-}
-
-print("------------------------------ directly_tested ------------------------------")
-directly_tested <- ttdf %>%
-  dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
-  dplyr::select(direct, alias) %>%
-  dplyr::group_by(alias) %>%
-  dplyr::summarize(any_direct_tests = any(direct, na.rm = TRUE)) %>%
-  dplyr::arrange(alias)
-
-write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
-            quote = FALSE)
-print(directly_tested)
 print("------------------------------ zero_cov ------------------------------")
 zero_cov <- covr::zero_coverage(cov)
 if (nrow(zero_cov) > 0) {
   write.table(zero_cov, file = ".covr_zero_coverage.txt", sep = "|",
-            row.names = TRUE, col.names = NA, na = "NA",
-            fileEncoding = "UTF-8", quote = FALSE)
+              row.names = TRUE, col.names = NA, na = "NA",
+              fileEncoding = "UTF-8", quote = FALSE)
 }
 print(zero_cov)
+
+if (cov_percent >0) {
+  print("-------- ttdf -----")
+  print(cov[[]]$tests)
+  ttdf <- test_trace_df(cov)
+  write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
+              row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+              quote = FALSE)
+  print(ttdf)
+  
+  print("------------------------------ traceability_matrix -------------------------------")
+  traceability_matrix <- ttdf %>%
+    dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
+    dplyr::select(test_name, file) %>%
+    dplyr::filter(!duplicated(.)) %>%
+    dplyr::arrange(file)
+  
+  write.table(traceability_matrix, file = ".covtracer_traceability_matrix.txt", sep = "|",
+              row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+              quote = FALSE)
+  
+  print(traceability_matrix)
+  #print(typeof(traceability_matrix))
+  
+  print("------------------------------ untested_behaviour ------------------------------")
+  untested_behaviour <- ttdf %>%
+    dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
+    dplyr::select(test_name, count, alias, file) %>%
+    dplyr::filter(is.na(count)) %>%
+    dplyr::arrange(alias)
+  
+  print(untested_behaviour)
+  if (nrow(untested_behaviour) > 0) {
+    write.table(untested_behaviour, file = ".covtracer_untested_behaviour.txt", sep = "|",
+                row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+                quote = FALSE)
+  }
+  
+  print("------------------------------ directly_tested ------------------------------")
+  directly_tested <- ttdf %>%
+    dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
+    dplyr::select(direct, alias) %>%
+    dplyr::group_by(alias) %>%
+    dplyr::summarize(any_direct_tests = any(direct, na.rm = TRUE)) %>%
+    dplyr::arrange(alias)
+  
+  write.table(directly_tested, file = ".covtracer_directly_tested.txt", sep = "|",
+              row.names = TRUE, col.names = NA, na = "NA", fileEncoding = "UTF-8",
+              quote = FALSE)
+  print(directly_tested)
+}
+
+setwd(curr_wd)
 print("------------------------------ end ------------------------------")
