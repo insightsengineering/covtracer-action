@@ -68,10 +68,10 @@ print(cov_percent)
 
 # covr::to_sonarqube(cov, filename = ".covtrace_sonarqube.txt")
 # print result of print to file
-print("------------------- start coverage report -------------------")
-print(paste0("Coverage: ", cov_percent))
+message("start_coverage_report")
+message(paste0("Coverage: ", cov_percent))
 print(cov)
-print("------------------- end coverage report -------------------")
+message("end_coverage_report")
 
 #print("------------------- prepare report in html -------------------")
 # covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
