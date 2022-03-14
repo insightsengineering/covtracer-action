@@ -71,8 +71,7 @@ runs:
         }
         if (!require("covtracer")) {
           remotes::install_github("Genentech/covtracer",
-            dependencies = TRUE, upgrade = "never", Ncpus = ncores,
-            auth_token=Sys.getenv("GITHUB_TOKEN")
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores
           )
         }
       shell: Rscript {0}
