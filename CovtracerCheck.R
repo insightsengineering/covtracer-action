@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
 library("optparse")
-library("covtracer")
 library("magrittr")
+library("covtracer")
 
 # list of supported arguments
 get_option_list <- function() {
@@ -182,7 +182,7 @@ message(paste0("Coverage: ", cov_percent))
 
 print(cov)
 if (cov_percent < minimal_coverage) {
-  warning("❌  CovtracerCheck - not enouch covered")
+  warning("❌  Insufficient test coverage")
 }
 message("end-coverage_report")
 
