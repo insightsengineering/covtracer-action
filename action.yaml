@@ -61,12 +61,6 @@ runs:
           install.packages("remotes",
             dependencies = TRUE, upgrade = "never", Ncpus = ncores)
         }
-        if (!require("covtracer")) {
-          remotes::install_github("Genentech/covtracer",
-            dependencies = TRUE, upgrade = "never", Ncpus = ncores,
-            auth_token=Sys.getenv("GITHUB_TOKEN")
-          )
-        }
         if (!require("optparse")) {
           install.packages("optparse",
             dependencies = TRUE, upgrade = "never", Ncpus = ncores)
@@ -74,6 +68,12 @@ runs:
         if (!require("covr")) {
           install.packages("covr",
             dependencies = TRUE, upgrade = "never", Ncpus = ncores)
+        }
+        if (!require("covtracer")) {
+          remotes::install_github("Genentech/covtracer",
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores,
+            auth_token=Sys.getenv("GITHUB_TOKEN")
+          )
         }
         #if (!require("DT")) {
         #  install.packages(c("DT", "htmltools"),

@@ -86,7 +86,7 @@ print(zero_cov)
 
 print(cov[[]]$tests)
 
-if (cov_percent >0) {
+if (cov_percent > 0) {
   print("-------- ttdf -----")
   ttdf <- test_trace_df(cov)
   write.table(ttdf, file = ".covtracer_ttdf.txt", sep = "|",
