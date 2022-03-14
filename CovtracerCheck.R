@@ -49,7 +49,7 @@ pkg <- arguments$args
 opt$Called_from_command_line <- TRUE # nolint
 
 # print options to log
-message("start_options_list")
+message("start-options_list")
 message("pkg: ", pkg, "\n")
 message("options: ")
 # print(opt)
@@ -57,7 +57,7 @@ minimal_coverage <- opt[["minimal-coverage"]]
 message("minimal_coverage: ", minimal_coverage)
 ignored_file_types <- strsplit(opt[["ignored-file-types"]], ",")
 message("ignored_file_types: ", ignored_file_types)
-message("\nend_options_list\n")
+message("\nend-options_list\n")
 
 
 curr_wd <- getwd()

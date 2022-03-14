@@ -137,10 +137,13 @@ runs:
         echo -e "\n" >> covtracer_result_formatted.txt
         echo -e "\n</details>\n" >> covtracer_result_formatted.txt
         if [[ -f ".covtracer_fail" ]]; then
-          cat ".covtracer_fail"
           echo -e "\n\n### CovtracerCheck FAILED ❌.\n" >> covtracer_result_formatted.txt
         else
-          echo -e "\n\n### CovtracerCheck PASSED 💚.\n" >> covtracer_result_formatted.txt
+          if [[ "$(grep -c 'Warning message:' --ignore-case covtracer_result.txt)" -gt 0 ]]; then
+            echo -e "\n\n### CovtracerCheck produced WARNINGs ⚠️.\n"  >> covtracer_result_formatted.txt
+          else
+            echo -e "\n\n### CovtracerCheck PASSED 💚.\n" >> covtracer_result_formatted.txt
+          fi
         fi
       shell: bash
 
