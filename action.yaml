@@ -80,8 +80,6 @@ runs:
     - name: Prepare script options
       run: |
         declare -a options
-        test "${{ inputs.build-output-file }}x" = "x" || options+=(--build-output-file ${{ inputs.build-output-file }})
-        test "${{ inputs.quit-with-status }}" = "true" && options+=(--quit-with-status)
         test "${{ inputs.ignored-file-types }}" != "" && options+=(--ignored-file-types ${{ inputs.ignored-file-types }})
         test "${{ inputs.minimal-coverage }}" != "" && options+=(--minimal-coverage ${{ inputs.minimal-coverage }})
         echo "COVTRACER_OPTIONS=${options[@]}" >> $GITHUB_ENV
@@ -97,25 +95,27 @@ runs:
     - name: Format output
       if: inputs.post-result-as-comment
       run: |
-        ls -al .
+        echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt
         if  [[ ! -f ".covtracer_fail" ]]; then
-          echo " ------ covtracer_result ------"
-          [ -f covtracer_result.txt ] && cat covtracer_result.txt
-          echo "------------------ end covtracer_result---------------------------------------"
-          echo "----------------- covtracer_fail -------------------------------"
-          [ -f .covtracer_fail ] && cat .covtracer_fail
-          echo "------------------ end covtracer_fail ---------------------------------------"
+#          echo " ------ covtracer_result ------"
+#          [ -f covtracer_result.txt ] && cat covtracer_result.txt
+#          echo "------------------ end covtracer_result---------------------------------------"
+#          echo "----------------- covtracer_fail -------------------------------"
+#          [ -f .covtracer_fail ] && cat .covtracer_fail
+#          echo "------------------ end covtracer_fail ---------------------------------------"         
           echo -e "### CovtracerCheck results\n\n" > covtracer_result_formatted.txt 
           if [ -f ".covtracer_traceability_matrix.txt" ]; then
             echo -e "\n**Traceability Matrix:**\n" >> covtracer_result_formatted.txt
             sed 's/.*/|&|/g' .covtracer_traceability_matrix.txt | sed '2 i | --- | --- | --- |' >> covtracer_result_formatted.txt
             echo -e "\n" >> covtracer_result_formatted.txt
           fi
+          
           if [ -f ".covtracer_directly_tested.txt" ]; then
             echo -e "\n**Directly tested:**\n" >> covtracer_result_formatted.txt
             sed 's/.*/|&|/g' .covtracer_directly_tested.txt | sed '2 i | --- | --- | --- |'>> covtracer_result_formatted.txt
             echo -e "\n" >> covtracer_result_formatted.txt
           fi
+          
           echo -e "\n**Untested:**\n" >> covtracer_result_formatted.txt
           if [ -f ".covtracer_untested_behaviour.txt" ]; then
             sed 's/.*/|&|/g' .covtracer_untested_behaviour.txt | sed '2 i | --- | --- | --- | --- | ---- |' >> covtracer_result_formatted.txt
@@ -123,24 +123,17 @@ runs:
             echo -e "*Information not recognized*\n" >> covtracer_result_formatted.txt
           fi
           echo -e "\n" >> covtracer_result_formatted.txt
-          if [ -f ".covtracer_coverage_result.txt" ]; then
-            echo -e "\n**Coverage test summary:**\n" >> covtracer_result_formatted.txt
-            sed 's/(.*\"------------------- start coverage report -------------------\")(.*)(\[1\]\ \"------------------- end coverage report -------------------\".*)/\\2/g' covtracer_result.txt
-            # sed 's/.*/|&|/g' .covtracer_coverage_result.txt | sed '2 i | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |' >> covtracer_result_formatted.txt
-            echo -e "\n" >> covtracer_result_formatted.txt
-          fi
-          #if [ -f ".covtracer_coverage_summary.txt" ]; then
-            echo -e "\n**Covr test summary:**\n\n\`\`\`\n" >> covtracer_result_formatted.txt
-            sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d'
-            sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d' >> covtracer_result_formatted.txt
-            #sed 's/.*/\|&\|/g' ".covtracer_coverage_summary.txt" | sed '2 i | --- | --- | --- | --- | --- |' >> covtracer_result_formatted.txt
-            echo -e "\n\`\`\`\n" >> covtracer_result_formatted.txt
-          #fi
+          
+          echo -e "\n**Covr test summary:**\n\n\`\`\`\n" >> covtracer_result_formatted.txt
+          sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d'
+          sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d' >> covtracer_result_formatted.txt
+          echo -e "\n\`\`\`\n" >> covtracer_result_formatted.txt
+
           if [ -f ".covtracer_cov_report.html" ]; then
             echo -e "\n**Coverage cor report:**\n" >> covtracer_result_formatted.txt
-            # cat ".covtracer_cov_report.html"  >> covtracer_result_formatted.txt
             echo -e "\n" >> covtracer_result_formatted.txt
           fi
+          
           echo -e "\n**Covr zero coverage summary:**\n" >> covtracer_result_formatted.txt
           if [ -f ".covr_zero_coverage.txt" ]; then
             cat ".covr_zero_coverage.txt"
@@ -149,23 +142,10 @@ runs:
             echo -e "*covr Zero coverage does not detect anything*\n" >> covtracer_result_formatted.txt
           fi
           echo -e "\n" >> covtracer_result_formatted.txt
-          
-        else
-          echo "❌ CovtracerCheck has errors" >> covtracer_result_formatted.txt
         fi
-#        test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED.\n" > covtracer_result_formatted.txt) || \
-#          (echo -e "### CovtracerCheck PASSED.\n" > covtracer_result_formatted.txt)
-#        head -2 covtracer_result.txt >> covtracer_result_formatted.txt
-#        echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt
-#        echo '```'  >> covtracer_result_formatted.txt
-#        sed -n '/.*Installing package...$/, /^Summary:$/p' covtracer_result.txt | tail -n +2 |grep -v "^Summary:$" >> covtracer_result_formatted.txt
-#        echo '```'  >> covtracer_result_formatted.txt
-#        echo "</details>" >> covtracer_result_formatted.txt
-#        echo  -e "\n### Summary:\n" >> covtracer_result_formatted.txt
-#        echo '```'  >> covtracer_result_formatted.txt
-#        grep -A 3 "^Summary:$" covtracer_result.txt | grep -v Summary >> covtracer_result_formatted.txt
-#        echo '```' >> covtracer_result_formatted.txt
-#        grep -v "CovtracerCheck FAILED" covtracer_result.txt | tail -3 >> covtracer_result_formatted.txt
+        echo "</details>" >> covtracer_result_formatted.txt
+        test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED ❌.\n" > covtracer_result_formatted.txt) || \
+          (echo -e "### CovtracerCheck PASSED 💚.\n" > covtracer_result_formatted.txt)
       shell: bash
 
     - uses: marocchino/sticky-pull-request-comment@v2
