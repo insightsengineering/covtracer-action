@@ -96,13 +96,7 @@ runs:
       if: inputs.post-result-as-comment
       run: |
         echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt
-        if  [[ ! -f ".covtracer_fail" ]]; then
-#          echo " ------ covtracer_result ------"
-#          [ -f covtracer_result.txt ] && cat covtracer_result.txt
-#          echo "------------------ end covtracer_result---------------------------------------"
-#          echo "----------------- covtracer_fail -------------------------------"
-#          [ -f .covtracer_fail ] && cat .covtracer_fail
-#          echo "------------------ end covtracer_fail ---------------------------------------"         
+        if  [[ ! -f ".covtracer_fail" ]]; then  
           echo -e "### CovtracerCheck results\n\n" > covtracer_result_formatted.txt 
           if [ -f ".covtracer_traceability_matrix.txt" ]; then
             echo -e "\n**Traceability Matrix:**\n" >> covtracer_result_formatted.txt
