@@ -33,7 +33,6 @@ usage <- function() {
   optparse::print_help(get_arg_parser())
 }
 
-
 parser <- get_arg_parser()
 tryCatch(
   expr = {
@@ -46,13 +45,12 @@ tryCatch(
 
 opt <- arguments$options
 pkg <- arguments$args
-opt$Called_from_command_line <- TRUE # nolint
+opt$Called_from_command_line <- TRUE
 
 # print options to log
 message("start-options_list")
 message("pkg: ", pkg, "\n")
 message("options: ")
-# print(opt)
 minimal_coverage <- opt[["minimal-coverage"]]
 message("minimal_coverage: ", minimal_coverage)
 ignored_file_types <- strsplit(opt[["ignored-file-types"]], ",")
@@ -98,7 +96,8 @@ if (nrow(zero_cov) > 0) {
 }
 print(zero_cov)
 
-# do not create test_trace_df, if zero cov - it generates error about missing data
+# do not create test_trace_df when zero cov
+# to avoid fake error to missing `covr.record_tests = TRUE`
 if (cov_percent > 0) {
   message("start-ttdf -----")
   ttdf <- test_trace_df(cov)
@@ -113,14 +112,14 @@ if (cov_percent > 0) {
     quote = FALSE
   )
   print(ttdf)
-  
+
   message("start-traceability_matrix -----")
   traceability_matrix <- ttdf %>%
-    dplyr::filter(!doctype %in% ignored_file_types) %>% # ignore objects without testable code
+    dplyr::filter(!doctype %in% ignored_file_types) %>%
     dplyr::select(test_name, file) %>%
     dplyr::filter(!duplicated(.)) %>%
     dplyr::arrange(file)
-  
+
   write.table(
     traceability_matrix,
     file = ".covtracer_traceability_matrix.txt",
@@ -131,16 +130,15 @@ if (cov_percent > 0) {
     fileEncoding = "UTF-8",
     quote = FALSE
   )
-  
   print(traceability_matrix)
-  
+
   message("start-untested_behaviour -----")
   untested_behaviour <- ttdf %>%
     dplyr::filter(!doctype %in% ignored_file_types) %>% # ignore objects without testable code
     dplyr::select(test_name, count, alias, file) %>%
     dplyr::filter(is.na(count)) %>%
     dplyr::arrange(alias)
-  
+
   print(untested_behaviour)
   if (nrow(untested_behaviour) > 0) {
     write.table(
@@ -154,7 +152,7 @@ if (cov_percent > 0) {
       quote = FALSE
     )
   }
-  
+
   message("start-directly_tested -----")
   directly_tested <- ttdf %>%
     dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
@@ -162,7 +160,7 @@ if (cov_percent > 0) {
     dplyr::group_by(alias) %>%
     dplyr::summarize(any_direct_tests = any(direct, na.rm = TRUE)) %>%
     dplyr::arrange(alias)
-  
+
   write.table(
     directly_tested,
     file = ".covtracer_directly_tested.txt",

@@ -39,6 +39,17 @@ jobs:
           R CMD INSTALL --with-keep.source stageddeps.water_*.tar.gz
           R CMD check stageddeps.water_*.tar.gz
 
+      - name: Install pre-requisities
+        env:
+          GITHUB_PAT: ${{ secrets.INDIVIDUAL_GH_PAT }}
+        run: |
+          R --vanilla -e 'if (!require("covtracer")) {
+              remotes::install_github("Genentech/covtracer",
+                dependencies = TRUE, upgrade = "never",
+                repos = c(CRAN = "https://cloud.r-project.org/")
+              )
+            }'
+
       - name: Test covracerCheck action
         uses: ./
         env:
