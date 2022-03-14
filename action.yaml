@@ -119,8 +119,8 @@ runs:
           echo -e "\n" >> covtracer_result_formatted.txt
           
           echo -e "\n**Covr test summary:**\n\n\`\`\`\n" >> covtracer_result_formatted.txt
-          sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d'
-          sed -n '/^start_coverage_report$/,/^end_coverage_report$/p' covtracer_result.txt | sed '1d;$d' >> covtracer_result_formatted.txt
+          sed -n '/^start-coverage_report$/,/^end-coverage_report$/p' covtracer_result.txt | sed '1d;$d'
+          sed -n '/^start-coverage_report$/,/^end-coverage_report$/p' covtracer_result.txt | sed '1d;$d' >> covtracer_result_formatted.txt
           echo -e "\n\`\`\`\n" >> covtracer_result_formatted.txt
 
           if [ -f ".covtracer_cov_report.html" ]; then
@@ -137,9 +137,9 @@ runs:
           fi
           echo -e "\n" >> covtracer_result_formatted.txt
         fi
-        echo "</details>" >> covtracer_result_formatted.txt
+        echo "\n</details>\n" >> covtracer_result_formatted.txt
         test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED ❌.\n" > covtracer_result_formatted.txt) || \
-          (echo -e "### CovtracerCheck PASSED 💚.\n" >> covtracer_result_formatted.txt)
+          (echo -e "\n\n### CovtracerCheck PASSED 💚.\n" >> covtracer_result_formatted.txt)
       shell: bash
 
     - uses: marocchino/sticky-pull-request-comment@v2
