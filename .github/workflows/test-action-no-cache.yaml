@@ -46,7 +46,8 @@ jobs:
           R --vanilla -e 'if (!require("covtracer")) {
               remotes::install_github("Genentech/covtracer",
                 dependencies = TRUE, upgrade = "never",
-                repos = c(CRAN = "https://cloud.r-project.org/")
+                repos = c(CRAN = "https://cloud.r-project.org/",
+                ref = "main")
               )
             }'
 
