@@ -75,10 +75,6 @@ runs:
             auth_token=Sys.getenv("GITHUB_TOKEN")
           )
         }
-        #if (!require("DT")) {
-        #  install.packages(c("DT", "htmltools"),
-        #    dependencies = TRUE, upgrade = "never", Ncpus = ncores)
-        #}
       shell: Rscript {0}
 
     - name: Prepare script options
@@ -86,6 +82,8 @@ runs:
         declare -a options
         test "${{ inputs.build-output-file }}x" = "x" || options+=(--build-output-file ${{ inputs.build-output-file }})
         test "${{ inputs.quit-with-status }}" = "true" && options+=(--quit-with-status)
+        test "${{ inputs.ignored-file-types }}" != "" && options+=(--ignored-file-types ${{ inputs.ignored-file-types }})
+        test "${{ inputs.minimal-coverage }}" != "" && options+=(--minimal-coverage ${{ inputs.minimal-coverage }})
         echo "COVTRACER_OPTIONS=${options[@]}" >> $GITHUB_ENV
       shell: bash
 
@@ -122,7 +120,7 @@ runs:
           if [ -f ".covtracer_untested_behaviour.txt" ]; then
             sed 's/.*/|&|/g' .covtracer_untested_behaviour.txt | sed '2 i | --- | --- | --- | --- | ---- |' >> covtracer_result_formatted.txt
           else
-            echo -e "*No untested behaviour was detected*\n" >> covtracer_result_formatted.txt
+            echo -e "*Information not recognized*\n" >> covtracer_result_formatted.txt
           fi
           echo -e "\n" >> covtracer_result_formatted.txt
           if [ -f ".covtracer_coverage_result.txt" ]; then

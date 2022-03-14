@@ -7,13 +7,24 @@ library("magrittr")
 get_option_list <- function() {
   list(
     make_option("--build-output-file",
-      type = "character",
-      help = "file containing R CMD build output, for additional analysis",
-      metavar = "build-output-file"
+                type = "character",
+                help = "file containing R CMD build output, for additional analysis",
+                metavar = "build-output-file"
     ),
     make_option("--quit-with-status",
-      action = "store_true",
-      help = "enable exit code option when performing check"
+                action = "store_true",
+                help = "enable exit code option when performing check"
+    ),
+    make_option("--ignored-file-types",
+                help = "ignored file data types (default %default)",
+                metavar = "ignored-file-types",
+                default = "data,class"
+    ),
+    make_option("--minimal-coverage",
+                type = "integer",
+                help = "minimal coverage",
+                metavar = "minimal-coverage",
+                default = 80
     )
   )
 }
@@ -47,6 +58,12 @@ opt$Called_from_command_line <- TRUE # nolint
 
 print("opt content:")
 print(opt)
+minimal_coverage <- opt[["minimal-coverage"]]
+message(paste("minimal_coverage", minimal_coverage))
+
+ignored_file_types <- strsplit(opt[["ignored-file-types"]], ",")
+message(paste("ignored_file_types", ignored_file_types))
+
 print("pkg: ")
 #pkg <- "stageddeps.water"
 #pkg <- "r.pkg.template"
@@ -65,13 +82,6 @@ write.table(cov, file = ".covtracer_coverage_result.txt", sep = "|",
 print(cov)
 cov_percent <- covr::percent_coverage(cov)
 print(cov_percent)
-
-# covr::to_sonarqube(cov, filename = ".covtrace_sonarqube.txt")
-# print result of print to file
-message("start_coverage_report")
-message(paste0("Coverage: ", cov_percent))
-print(cov)
-message("end_coverage_report")
 
 #print("------------------- prepare report in html -------------------")
 # covr::report(cov, file = ".covtracer_cov_report.html", browse = FALSE)
@@ -96,7 +106,7 @@ if (cov_percent > 0) {
   
   print("------------------------------ traceability_matrix -------------------------------")
   traceability_matrix <- ttdf %>%
-    dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
+    dplyr::filter(!doctype %in% ignored_file_types) %>% # ignore objects without testable code
     dplyr::select(test_name, file) %>%
     dplyr::filter(!duplicated(.)) %>%
     dplyr::arrange(file)
@@ -110,7 +120,7 @@ if (cov_percent > 0) {
   
   print("------------------------------ untested_behaviour ------------------------------")
   untested_behaviour <- ttdf %>%
-    dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
+    dplyr::filter(!doctype %in% ignored_file_types) %>% # ignore objects without testable code
     dplyr::select(test_name, count, alias, file) %>%
     dplyr::filter(is.na(count)) %>%
     dplyr::arrange(alias)
@@ -135,6 +145,17 @@ if (cov_percent > 0) {
               quote = FALSE)
   print(directly_tested)
 }
+
+# covr::to_sonarqube(cov, filename = ".covtrace_sonarqube.txt")
+# print result of print to file
+message("start_coverage_report")
+message(paste0("Coverage: ", cov_percent))
+print(cov)
+if (cov_percent < minimal_coverage) {
+  warning( "❌ CovtracerCheck - not enouch covered")
+}  
+message("end_coverage_report")
+
 
 setwd(curr_wd)
 print("------------------------------ end ------------------------------")
