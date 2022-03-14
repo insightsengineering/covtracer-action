@@ -19,14 +19,14 @@ jobs:
       fail-fast: false
       matrix:
         image: ["rocker/verse"]
-        tag: ["4.1.2", "4.1.0", "4.0.3", "3.6.3"]
+        tag: ["4.1.2", "4.1.0", "4.0.3"]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      
+
       # test use public repository
       # and simple R-package
-      # without tests or low code coverage 
+      # without tests or low code coverage
       - name: Checkout test repo
         uses: actions/checkout@v2
         with:
@@ -38,18 +38,6 @@ jobs:
           R CMD build stageddeps.water
           R CMD INSTALL --with-keep.source stageddeps.water_*.tar.gz
           R CMD check stageddeps.water_*.tar.gz
-
-      - name: Install pre-requisities
-        env:
-          GITHUB_PAT: ${{ secrets.INDIVIDUAL_GH_PAT }}
-        run: |
-          R --vanilla -e 'if (!require("covtracer")) {
-              remotes::install_github("Genentech/covtracer",
-                dependencies = TRUE, upgrade = "never",
-                repos = c(CRAN = "https://cloud.r-project.org/",
-                ref = "main")
-              )
-            }'
 
       - name: Test covracerCheck action
         uses: ./
