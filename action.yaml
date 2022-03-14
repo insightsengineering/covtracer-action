@@ -139,7 +139,7 @@ runs:
         fi
         echo "</details>" >> covtracer_result_formatted.txt
         test -f ".covtracer_fail" && (echo -e "### CovtracerCheck FAILED ❌.\n" > covtracer_result_formatted.txt) || \
-          (echo -e "### CovtracerCheck PASSED 💚.\n" > covtracer_result_formatted.txt)
+          (echo -e "### CovtracerCheck PASSED 💚.\n" >> covtracer_result_formatted.txt)
       shell: bash
 
     - uses: marocchino/sticky-pull-request-comment@v2

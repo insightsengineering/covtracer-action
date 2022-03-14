@@ -39,6 +39,8 @@ jobs:
 
       - name: Run CovtracerCheck
         uses: insightsengineering/covtracer-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_PUBLIC_GITHUB_TOKEN }}
 
 ```
 
@@ -46,7 +48,9 @@ jobs:
 
 ## Environment variables
 
-it is preferred to add GITHUB_TOKEN as secret for repository or organization [Manage secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces)
+it is preferred to add `MY_PUBLIC_GITHUB_TOKEN` as secret 
+for repository or organization [Manage secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces). 
+Related to Github download limit by `unathenticated account`.
 
 * `GITHUB_TOKEN`:
 
