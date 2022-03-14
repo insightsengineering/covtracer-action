@@ -41,7 +41,7 @@ jobs:
       - name: Run CovtracerCheck
         uses: insightsengineering/covtracer-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_PUBLIC_GITHUB_TOKEN }}
+          GITHUB_PAT: ${{ secrets.MY_PUBLIC_GITHUB_TOKEN }}
 
 ```
 
