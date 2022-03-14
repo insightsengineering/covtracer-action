@@ -48,9 +48,27 @@ jobs:
 
 ## Environment variables
 
-it is preferred to add `MY_PUBLIC_GITHUB_TOKEN` as secret 
+it is preferred to add secret like for example `MY_PUBLIC_GITHUB_TOKEN`
 for repository or organization [Manage secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces). 
-Related to Github download limit by `unathenticated account`.
+Related to avoid Github download limit set to `unathenticated account`. 
+
+<details>
+<summary>Rate limit error details</summary>
+
+```
+
+Using bundled GitHub PAT. Please add your own PAT to the env var `GITHUB_PAT`
+Error: Failed to install 'unknown package' from GitHub:
+  HTTP error 401.
+  Bad credentials
+
+  Rate limit remaining: 59/60
+  Rate limit reset at: 2022-03-09 09:59:22 UTC
+
+```
+
+</details>
+
 
 * `GITHUB_TOKEN`:
 
@@ -59,7 +77,6 @@ Related to Github download limit by `unathenticated account`.
 
   _Required_: `false`
 
-  _Default_: `none`
 
 ## Inputs
 
