@@ -74,7 +74,7 @@ Related to avoid Github download limit set to `unathenticated account`.
 
 * `allow-failure`:
 
-  _Description_: CovtracerCheck errors will not fail, but will give a warning.
+  _Description_: CovtracerCheck errors will give a warning instead of causing a pipeline failure.
 
   _Required_: `false`
 
