@@ -21,6 +21,7 @@
 
 library("optparse")
 library("magrittr")
+library("covr")
 library("covtracer")
 
 # list of supported arguments
@@ -80,7 +81,7 @@ message("\nend-options_list\n")
 curr_wd <- getwd()
 setwd(pkg)
 options(covr.record_tests = TRUE)
-cov <- covr::package_coverage(".")
+cov <- package_coverage(".")
 
 setwd(curr_wd)
 
