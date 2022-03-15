@@ -106,7 +106,7 @@ Related to avoid Github download limit set to `unathenticated account`.
 
 * `no-cache`:
 
-  _Description_: disable github action R dependency caching.
+  _Description_: Disable GitHub Action R dependency caching.
 
   _Required_: `false`
 
