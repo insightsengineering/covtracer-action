@@ -1,4 +1,4 @@
-# covtracer-action
+# CovtracerCheck action
 Github Action based on the Covtracer R package
 
 ## Description

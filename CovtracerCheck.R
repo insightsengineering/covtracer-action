@@ -81,7 +81,12 @@ message("\nend-options_list\n")
 curr_wd <- getwd()
 setwd(pkg)
 options(covr.record_tests = TRUE)
-cov <- package_coverage(".")
+options("covr.record_tests" = TRUE)
+
+print(getOption("covr.record_tests"))
+
+message("Running package coverage")
+cov <- covr::package_coverage(".")
 
 setwd(curr_wd)
 
@@ -118,7 +123,7 @@ print(zero_cov)
 
 # do not create test_trace_df when zero cov
 # to avoid fake error to missing `covr.record_tests = TRUE`
-if (cov_percent > 0) {
+#if (cov_percent > 0) {
   message("start-ttdf -----")
   ttdf <- test_trace_df(cov)
   write.table(
@@ -192,7 +197,7 @@ if (cov_percent > 0) {
     quote = FALSE
   )
   print(directly_tested)
-}
+#}
 
 # print result of print to file
 message("start-coverage_report")
