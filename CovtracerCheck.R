@@ -1,5 +1,24 @@
 #!/usr/bin/env Rscript
 
+#
+# script using covtracer R package.
+# based on details from `covr` package.
+# It is a part of covtracer-action on github.
+#
+# Prepare reports:
+# - traceability_matrix
+# - identify untested behaviour
+# - verify directly tested/untested functions
+#
+# Required R packages:
+# - covr - to check coverage
+# - covtracer - to generate reports
+# - optparse - to parse command line options
+# - other packages:
+#   - magrittr - forward pipe operator for R
+#   - dplyr - tool for working with data frame
+#
+
 library("optparse")
 library("magrittr")
 library("covtracer")
