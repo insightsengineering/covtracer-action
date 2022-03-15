@@ -81,7 +81,6 @@ message("\nend-options_list\n")
 curr_wd <- getwd()
 setwd(pkg)
 options(covr.record_tests = TRUE)
-options("covr.record_tests" = TRUE)
 
 print(getOption("covr.record_tests"))
 

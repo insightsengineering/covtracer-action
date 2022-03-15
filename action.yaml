@@ -65,9 +65,10 @@ runs:
           install.packages("optparse",
             dependencies = TRUE, upgrade = "never", Ncpus = ncores)
         }
-        if (!require("covr")) {
-          install.packages("covr",
-            dependencies = TRUE, upgrade = "never", Ncpus = ncores)
+        if (!require("covr") || packageVersion("covr") < "3.5.1.9003") {
+          remotes::install_github("r-lib/covr",
+              dependencies = TRUE, upgrade = "never", Ncpus = ncores
+            )
         }
         if (!require("covtracer")) {
           remotes::install_github("Genentech/covtracer",
