@@ -91,7 +91,7 @@ to avoid GitHub download limit being set to `unauthenticated account`.
 
 * `minimal-coverage`:
 
-  _Description_: Minimal coverage.
+  _Description_: Minimal coverage threshold.
 
   _Required_: `false`
 
