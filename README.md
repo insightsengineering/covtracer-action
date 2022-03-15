@@ -99,7 +99,7 @@ to avoid GitHub download limit being set to `unauthenticated account`.
 
 * `post-result-as-comment`:
 
-  _Description_: post the check result as a PR comment.
+  _Description_: Post the check result as a PR comment.
 
   _Required_: `false`
 
