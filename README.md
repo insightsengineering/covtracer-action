@@ -83,7 +83,7 @@ to avoid GitHub download limit being set to `unauthenticated account`.
 
 * `ignored-file-types`:
 
-  _Description_: CovtracerCheck can ignore none code file types.
+  _Description_: CovtracerCheck can ignore non-code file types.
 
   _Required_: `false`
 
