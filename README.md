@@ -26,7 +26,7 @@ on:
       - main
 
 jobs:
-  covtracer-check:
+  covtracer:
     runs-on: ubuntu-latest
     name: Covtracer
     container:
