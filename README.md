@@ -2,7 +2,7 @@
 Github Action based on the Covtracer R package
 
 ## Description
-GitHub Action to implement check details from R package checks with [Covtracer](https://github.com/Genentech/covtracer).
+GitHub Action based on the [Covtracer](https://github.com/Genentech/covtracer) R package.
 
 Supported R version > 4.x
 
