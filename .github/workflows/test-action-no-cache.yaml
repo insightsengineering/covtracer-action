@@ -1,0 +1,49 @@
+---
+name: CovtracerCheck action test without cache
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.image }}, version ${{ matrix.tag }}
+    container:
+      image: ${{ matrix.image }}:${{ matrix.tag }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["rocker/verse"]
+        tag: ["4.1.2", "4.1.0", "4.0.3"]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      # test use public repository
+      # and simple R-package
+      # without tests or low code coverage
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: "openpharma/stageddeps.water"
+          path: "stageddeps.water"
+
+      - name: Run r cmd check
+        run: |
+          R CMD build stageddeps.water
+          R CMD INSTALL --with-keep.source stageddeps.water_*.tar.gz
+          R CMD check stageddeps.water_*.tar.gz
+
+      - name: Test covracerCheck action
+        uses: ./
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: "stageddeps.water"
+          allow-failure: false
+          no-cache: true

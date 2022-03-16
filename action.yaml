@@ -1,0 +1,167 @@
+---
+name: "Covtracer action"
+
+description: "Github Actions to implement R development stages for package development"
+inputs:
+  path:
+    description: Path to package's root
+    required: false
+    default: "."
+  allow-failure:
+    description: CovtracerCheck errors will not fail, but will give a warning.
+    required: false
+    type: boolean
+    default: false
+  ignored-file-types:
+    description: CovtracerCheck can ignore none code file types.
+    required: false
+    default: "data,class"
+  minimal-coverage:
+    description: "Minimal coverage"
+    required: false
+    default: 80
+  post-result-as-comment:
+    description: "post the check result as a PR comment"
+    required: false
+    default: true
+  no-cache:
+    description: "disable github action R dependency caching"
+    required: false
+    default: false
+branding:
+  icon: "arrow-right"
+  color: "blue"
+runs:
+  using: "composite"
+  steps:
+    - name: Get R version
+      id: r_version
+      run: echo "::set-output name=R_VERSION::$(R --version | head -1 | awk '{print $3}')"
+      shell: bash
+
+    - name: Set R Library home on Linux
+      run: |
+        mkdir -p /__w/_temp/Library
+        echo ".libPaths(c('/__w/_temp/Library', .libPaths()))" > ~/.Rprofile
+      shell: bash
+
+    - name: Cache R packages
+      if: "contains(inputs.no-cache, 'false')"
+      uses: actions/cache@v2
+      with:
+        path: /home/runner/work/_temp/Library
+        key: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
+        restore-keys: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        options(repos = c(CRAN = "https://cloud.r-project.org/"))
+        ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+        if (!require("remotes")) {
+          install.packages("remotes",
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores)
+        }
+        if (!require("optparse")) {
+          install.packages("optparse",
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores)
+        }
+        if (!require("covr") || packageVersion("covr") < "3.5.1.9003") {
+          remotes::install_github("r-lib/covr",
+              dependencies = TRUE, upgrade = "never", Ncpus = ncores
+            )
+        }
+        if (!require("covtracer")) {
+          remotes::install_github("Genentech/covtracer",
+            dependencies = TRUE, upgrade = "never", Ncpus = ncores
+          )
+        }
+      shell: Rscript {0}
+
+    - name: Prepare script options
+      run: |
+        declare -a options
+        test "${{ inputs.ignored-file-types }}" != "" && options+=(--ignored-file-types ${{ inputs.ignored-file-types }})
+        test "${{ inputs.minimal-coverage }}" != "" && options+=(--minimal-coverage ${{ inputs.minimal-coverage }})
+        echo "COVTRACER_OPTIONS=${options[@]}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Run CovtracerCheck
+      run: |
+        echo -e "Running: ${GITHUB_ACTION_PATH}/CovtracerCheck.R ${COVTRACER_OPTIONS} ${{ inputs.path }}\n\n"
+        ${GITHUB_ACTION_PATH}/CovtracerCheck.R ${COVTRACER_OPTIONS} ${{ inputs.path }} 2>&1 | \
+          tee covtracer_result.txt || echo "" > .covtracer_fail
+      shell: bash
+
+    - name: Format output
+      if: inputs.post-result-as-comment
+      run: |
+        echo "" > covtracer_result_formatted.txt
+        if [[ -f ".covtracer_fail" ]]; then
+          echo -e "\n\n### CovtracerCheck FAILED ❌.\n" >> covtracer_result_formatted.txt
+        else
+          if [[ "$(grep -c 'Warning message:' --ignore-case covtracer_result.txt)" -gt 0 ]]; then
+            echo -e "\n\n### CovtracerCheck produced WARNINGs ⚠️.\n"  >> covtracer_result_formatted.txt
+          else
+            echo -e "\n\n### CovtracerCheck PASSED 💚.\n" >> covtracer_result_formatted.txt
+          fi
+        fi
+        echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt       
+        echo -e "### CovtracerCheck results\n\n" >> covtracer_result_formatted.txt 
+        if [ -f ".covtracer_traceability_matrix.txt" ]; then
+          echo -e "\n**Traceability Matrix:**\n" >> covtracer_result_formatted.txt
+          sed 's/.*/|&|/g' .covtracer_traceability_matrix.txt | sed '2 i | --- | --- | --- |' >> covtracer_result_formatted.txt
+          echo -e "\n" >> covtracer_result_formatted.txt
+        fi
+
+        if [ -f ".covtracer_directly_tested.txt" ]; then
+          echo -e "\n**Directly tested:**\n" >> covtracer_result_formatted.txt
+          sed 's/.*/|&|/g' .covtracer_directly_tested.txt | sed '2 i | --- | --- | --- |'>> covtracer_result_formatted.txt
+          echo -e "\n" >> covtracer_result_formatted.txt
+        fi
+
+        echo -e "\n**Untested:**\n" >> covtracer_result_formatted.txt
+        if [ -f ".covtracer_untested_behaviour.txt" ]; then
+          sed 's/.*/|&|/g' .covtracer_untested_behaviour.txt | sed '2 i | --- | --- | --- | --- | ---- |' >> covtracer_result_formatted.txt
+        else
+          echo -e "*Information not recognized*\n" >> covtracer_result_formatted.txt
+        fi
+        echo -e "\n" >> covtracer_result_formatted.txt
+
+        echo -e "\n**Covr test summary:**\n\n\`\`\`\n" >> covtracer_result_formatted.txt
+        sed -n '/^start-coverage_report$/,/^end-coverage_report$/p' covtracer_result.txt | sed '1d;$d'
+        sed -n '/^start-coverage_report$/,/^end-coverage_report$/p' covtracer_result.txt | sed '1d;$d' >> covtracer_result_formatted.txt
+        echo -e "\n\`\`\`\n" >> covtracer_result_formatted.txt
+
+        if [ -f ".covtracer_cov_report.html" ]; then
+          echo -e "\n**Coverage cor report:**\n" >> covtracer_result_formatted.txt
+          echo -e "\n" >> covtracer_result_formatted.txt
+        fi
+
+        echo -e "\n**Covr zero coverage summary:**\n" >> covtracer_result_formatted.txt
+        if [ -f ".covr_zero_coverage.txt" ]; then
+          cat ".covr_zero_coverage.txt"
+          sed 's/.*/|&|/g' .covr_zero_coverage.txt | sed '2 i | --- | --- | --- | --- | --- |' >> covtracer_result_formatted.txt
+        else
+          echo -e "*covr Zero coverage does not detect anything*\n" >> covtracer_result_formatted.txt
+        fi
+        echo -e "\n" >> covtracer_result_formatted.txt
+        echo -e "\n</details>\n" >> covtracer_result_formatted.txt
+      shell: bash
+
+    - uses: marocchino/sticky-pull-request-comment@v2
+      if: inputs.post-result-as-comment
+      with:
+        header: CovtracerCheck "${{ inputs.no-cache }}"
+        path: covtracer_result_formatted.txt
+
+    - name: Check covtracer status
+      run: |
+        if [[ -f ".covtracer_fail"  &&  "${{ inputs.allow-failure }}" == "false" ]]; then
+          echo "❌ CovtracerCheck has errors"
+          exit 1
+        elif  [[ -f ".covtracer_fail" ]]; then
+            echo "⚠️ CovtracerCheck produced WARNINGs"
+        else
+          echo "💚 CovtracerCheck status OK"
+        fi
+      shell: bash

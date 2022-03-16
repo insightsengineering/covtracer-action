@@ -1,0 +1,50 @@
+---
+name: CovtracerCheck action test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.image }}, version ${{ matrix.tag }}
+    container:
+      image: ${{ matrix.image }}:${{ matrix.tag }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["ghcr.io/insightsengineering/rstudio_4.1.2_bioc_3.14"]
+        tag: ["latest"]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: "insightsengineering/r.pkg.template"
+          path: "r.pkg.template"
+
+      - name: Run r cmd check
+        run: |
+          R -e 'install.packages(c("plumber", "shiny", "shinytest"),
+                        dependencies = TRUE,
+                        upgrade = "never",
+                        repos = c(CRAN = "https://cloud.r-project.org/"))'
+          R -e 'shinytest::installDependencies()
+                file.copy(shinytest:::find_phantom(),
+                "/usr/local/bin/phantomjs")'
+          R CMD build r.pkg.template
+          R CMD INSTALL --with-keep.source r.pkg.template_*.tar.gz
+          R CMD check r.pkg.template_*.tar.gz
+
+      - name: Test covracerCheck action
+        uses: ./
+        with:
+          path: "r.pkg.template"
+          allow-failure: false
