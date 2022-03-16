@@ -42,7 +42,7 @@ jobs:
       - name: Test covracerCheck action
         uses: ./
         env:
-          GITHUB_PAT: ${{ secrets.INDIVIDUAL_GH_PAT }}
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         with:
           path: "stageddeps.water"
           allow-failure: false

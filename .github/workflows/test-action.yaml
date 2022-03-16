@@ -46,7 +46,7 @@ jobs:
       - name: Test covracerCheck action
         uses: ./
         env:
-          GITHUB_PAT: ${{ secrets.INDIVIDUAL_GH_PAT }}
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         with:
           path: "r.pkg.template"
           allow-failure: false

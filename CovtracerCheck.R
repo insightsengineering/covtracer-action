@@ -65,7 +65,7 @@ tryCatch(
 
 opt <- arguments$options
 pkg <- arguments$args
-opt$Called_from_command_line <- TRUE
+opt$Called_from_command_line <- TRUE # nolint
 
 # print options to log
 message("start-options_list")
