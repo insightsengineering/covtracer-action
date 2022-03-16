@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Covtracer
     container:
-      image: rocker/verse:4.1.0
+      image: rocker/verse:4.1.2
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
