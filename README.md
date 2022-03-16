@@ -28,7 +28,7 @@ on:
 jobs:
   covtracer-check:
     runs-on: ubuntu-latest
-    name: CovtracerCheck
+    name: Covtracer
     container:
       image: rocker/verse:4.1.0
     steps:
