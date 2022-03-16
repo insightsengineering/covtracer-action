@@ -120,14 +120,52 @@ if (nrow(zero_cov) > 0) {
 }
 print(zero_cov)
 
-# do not create test_trace_df when zero cov
-# to avoid fake error to missing `covr.record_tests = TRUE`
-#if (cov_percent > 0) {
-  message("start-ttdf -----")
-  ttdf <- test_trace_df(cov)
+message("start-ttdf -----")
+message("execute covtracer::test_trace_df")
+ttdf <- test_trace_df(cov)
+write.table(
+  ttdf,
+  file = ".covtracer_ttdf.txt",
+  sep = "|",
+  row.names = TRUE,
+  col.names = NA,
+  na = "NA",
+  fileEncoding = "UTF-8",
+  quote = FALSE
+)
+print(ttdf)
+
+message("start-traceability_matrix -----")
+traceability_matrix <- ttdf %>%
+  dplyr::filter(!doctype %in% ignored_file_types) %>%
+  dplyr::select(test_name, file) %>%
+  dplyr::filter(!duplicated(.)) %>%
+  dplyr::arrange(file)
+
+write.table(
+  traceability_matrix,
+  file = ".covtracer_traceability_matrix.txt",
+  sep = "|",
+  row.names = TRUE,
+  col.names = NA,
+  na = "NA",
+  fileEncoding = "UTF-8",
+  quote = FALSE
+)
+print(traceability_matrix)
+
+message("start-untested_behaviour -----")
+untested_behaviour <- ttdf %>%
+  dplyr::filter(!doctype %in% ignored_file_types) %>% # ignore objects without testable code
+  dplyr::select(test_name, count, alias, file) %>%
+  dplyr::filter(is.na(count)) %>%
+  dplyr::arrange(alias)
+
+print(untested_behaviour)
+if (nrow(untested_behaviour) > 0) {
   write.table(
-    ttdf,
-    file = ".covtracer_ttdf.txt",
+    untested_behaviour,
+    file = ".covtracer_untested_behaviour.txt",
     sep = "|",
     row.names = TRUE,
     col.names = NA,
@@ -135,68 +173,27 @@ print(zero_cov)
     fileEncoding = "UTF-8",
     quote = FALSE
   )
-  print(ttdf)
+}
 
-  message("start-traceability_matrix -----")
-  traceability_matrix <- ttdf %>%
-    dplyr::filter(!doctype %in% ignored_file_types) %>%
-    dplyr::select(test_name, file) %>%
-    dplyr::filter(!duplicated(.)) %>%
-    dplyr::arrange(file)
+message("start-directly_tested -----")
+directly_tested <- ttdf %>%
+  dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
+  dplyr::select(direct, alias) %>%
+  dplyr::group_by(alias) %>%
+  dplyr::summarize(any_direct_tests = any(direct, na.rm = TRUE)) %>%
+  dplyr::arrange(alias)
 
-  write.table(
-    traceability_matrix,
-    file = ".covtracer_traceability_matrix.txt",
-    sep = "|",
-    row.names = TRUE,
-    col.names = NA,
-    na = "NA",
-    fileEncoding = "UTF-8",
-    quote = FALSE
-  )
-  print(traceability_matrix)
-
-  message("start-untested_behaviour -----")
-  untested_behaviour <- ttdf %>%
-    dplyr::filter(!doctype %in% ignored_file_types) %>% # ignore objects without testable code
-    dplyr::select(test_name, count, alias, file) %>%
-    dplyr::filter(is.na(count)) %>%
-    dplyr::arrange(alias)
-
-  print(untested_behaviour)
-  if (nrow(untested_behaviour) > 0) {
-    write.table(
-      untested_behaviour,
-      file = ".covtracer_untested_behaviour.txt",
-      sep = "|",
-      row.names = TRUE,
-      col.names = NA,
-      na = "NA",
-      fileEncoding = "UTF-8",
-      quote = FALSE
-    )
-  }
-
-  message("start-directly_tested -----")
-  directly_tested <- ttdf %>%
-    dplyr::filter(!doctype %in% c("data", "class")) %>% # ignore objects without testable code
-    dplyr::select(direct, alias) %>%
-    dplyr::group_by(alias) %>%
-    dplyr::summarize(any_direct_tests = any(direct, na.rm = TRUE)) %>%
-    dplyr::arrange(alias)
-
-  write.table(
-    directly_tested,
-    file = ".covtracer_directly_tested.txt",
-    sep = "|",
-    row.names = TRUE,
-    col.names = NA,
-    na = "NA",
-    fileEncoding = "UTF-8",
-    quote = FALSE
-  )
-  print(directly_tested)
-#}
+write.table(
+  directly_tested,
+  file = ".covtracer_directly_tested.txt",
+  sep = "|",
+  row.names = TRUE,
+  col.names = NA,
+  na = "NA",
+  fileEncoding = "UTF-8",
+  quote = FALSE
+)
+print(directly_tested)
 
 # print result of print to file
 message("start-coverage_report")
