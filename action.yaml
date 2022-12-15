@@ -36,7 +36,7 @@ runs:
   steps:
     - name: Get R version
       id: r_version
-      run: echo "::set-output name=R_VERSION::$(R --version | head -1 | awk '{print $3}')"
+      run: echo "R_VERSION=$(R --version | head -1 | awk '{print $3}')" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Set R Library home on Linux
@@ -105,8 +105,8 @@ runs:
             echo -e "\n\n### CovtracerCheck PASSED 💚.\n" >> covtracer_result_formatted.txt
           fi
         fi
-        echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt       
-        echo -e "### CovtracerCheck results\n\n" >> covtracer_result_formatted.txt 
+        echo -e "\n<details>\n  <summary>Click here to show log</summary>\n" >> covtracer_result_formatted.txt
+        echo -e "### CovtracerCheck results\n\n" >> covtracer_result_formatted.txt
         if [ -f ".covtracer_traceability_matrix.txt" ]; then
           echo -e "\n**Traceability Matrix:**\n" >> covtracer_result_formatted.txt
           sed 's/.*/|&|/g' .covtracer_traceability_matrix.txt | sed '2 i | --- | --- | --- |' >> covtracer_result_formatted.txt
