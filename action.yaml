@@ -47,7 +47,7 @@ runs:
 
     - name: Cache R packages
       if: "contains(inputs.no-cache, 'false')"
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: /home/runner/work/_temp/Library
         key: ${{ inputs.cache-version }}-${{ runner.os }}-${{ steps.r_version.outputs.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
