@@ -33,7 +33,7 @@ jobs:
       image: rocker/verse:4.1.2
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run rcmdcheck
         run: |
@@ -54,7 +54,7 @@ jobs:
 
 It is preferred to add secret like `MY_PUBLIC_GITHUB_TOKEN`
 for repository or organization [(Managing encrypted secrets)](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-encrypted-secrets-for-your-codespaces)
-to avoid GitHub download limit being set to `unauthenticated account`. 
+to avoid GitHub download limit being set to `unauthenticated account`.
 
 
 * `GITHUB_PAT`:

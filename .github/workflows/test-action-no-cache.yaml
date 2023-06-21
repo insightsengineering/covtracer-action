@@ -22,13 +22,13 @@ jobs:
         tag: ["4.1.2", "4.1.0", "4.0.3"]
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # test use public repository
       # and simple R-package
       # without tests or low code coverage
       - name: Checkout test repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: "openpharma/stageddeps.water"
           path: "stageddeps.water"

@@ -22,10 +22,10 @@ jobs:
         tag: ["latest"]
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout test repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: "insightsengineering/r.pkg.template"
           path: "r.pkg.template"
